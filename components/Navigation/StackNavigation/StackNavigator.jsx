@@ -13,6 +13,7 @@ const StackNavigator = ({ stackNav }) => {
             name={stack.name}
             key={index}
             component={stack.component}
+            options={stack.options}
           />
         );
       })}

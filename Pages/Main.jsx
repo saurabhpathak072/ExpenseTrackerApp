@@ -3,9 +3,13 @@ import React from 'react';
 
 import StackNavigator from '../components/Navigation/StackNavigation/StackNavigator';
 import { stackNavigation } from './MainNavigations';
+import { GlobalStyles } from '../constants/style';
 
 const Main = () => {
-  return <StackNavigator stackNav={stackNavigation} />;
+  return <StackNavigator screenOptions={{
+    headerStyle:{backgroundColor: GlobalStyles.colors.primary500},
+    headerTintColor: 'white'
+  }} stackNav={stackNavigation} />;
 };
 
 export default Main;

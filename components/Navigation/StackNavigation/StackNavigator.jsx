@@ -4,9 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
-const StackNavigator = ({ stackNav }) => {
+const StackNavigator = ({ stackNav, screenOptions }) => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={screenOptions}>
       {stackNav.map((stack, index) => {
         return (
           <Stack.Screen

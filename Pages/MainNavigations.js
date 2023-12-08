@@ -13,6 +13,9 @@ export const stackNavigation = [{
 {
     name: navigation_names.ManageExpense,
     component: ManageExpenses,
+    options:{
 
+        presentation:'modal'
+    }
 }
 ]

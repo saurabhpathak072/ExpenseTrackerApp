@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import ExpenseOutput from '../components/ExpenseOutput/ExpenseOutput'
+import { ExpenseCtx } from '../store/Context/ExpenseContext';
 
 const AllExpenses = () => {
+  const {expensesList} = useContext(ExpenseCtx);
   return (
     <>
-      <ExpenseOutput expensesPeriodName={"All"}/>
+      <ExpenseOutput fallBackText={"There is no expense registered!!"} expenses={expensesList} expensesPeriodName={"All"}/>
     </>
   )
 }

@@ -8,7 +8,8 @@ export const ExpenseCtx = createContext({
   deleteExpense: (id) => {},
   updateExpense: (id, { date, amount, description }) => {},
   isLoading: false,
-  setIsLoading:()=>{}
+  setIsLoading:()=>{},
+  closeLoading:()=>{},
 
 });
 
@@ -32,6 +33,10 @@ const ExpenseContextProvider = ({ children }) => {
     dispatch({ type: 'UPDATE', payload: { id, data: expenseData } });
   };
 
+  const closeLoading=()=>{
+    setIsLoading((loader)=>!loader)
+  }
+
   const values = {
     expensesList: expenseState,
     addExpense: addExpense,
@@ -39,7 +44,8 @@ const ExpenseContextProvider = ({ children }) => {
     updateExpense: updatedExpense,
     setExpenses: setExpenses,
     isLoading:isLoading,
-    setIsLoading:setIsLoading
+    setIsLoading:setIsLoading,
+    closeLoading:closeLoading
   };
   return <ExpenseCtx.Provider value={values}>{children}</ExpenseCtx.Provider>;
 };

@@ -11,10 +11,17 @@ import {
   storeExpense,
   updateExpenseRequest,
 } from '../utils/Http/expensesRequest';
+import LoaderOverlay from '../components/UI/Loader/LoaderOverlay';
 
 const ManageExpenses = () => {
-  const { expensesList, addExpense, updateExpense, deleteExpense } =
-    useContext(ExpenseCtx);
+  const {
+    expensesList,
+    addExpense,
+    updateExpense,
+    deleteExpense,
+    setIsLoading,
+    isLoading,
+  } = useContext(ExpenseCtx);
   const { params } = useRoute();
   const navigation = useNavigation();
 
@@ -30,13 +37,17 @@ const ManageExpenses = () => {
   }, [navigation, isEditing]);
 
   const deleteExpenseHandler = () => {
+    setIsLoading(true);
     deleteExpenseRequest(editExpenseId)
       .then(() => {
         deleteExpense(editExpenseId);
+        setIsLoading(false);
       })
       .catch((err) => {
         Alert.alert('Error', err.message);
+        setIsLoading(false);
       });
+
     navigation.goBack();
   };
 
@@ -45,20 +56,39 @@ const ManageExpenses = () => {
   };
 
   const confirmExpenseHandler = async (expenseData) => {
+    setIsLoading(true);
     if (isEditing) {
       updateExpenseRequest(editExpenseId, expenseData)
         .then((res) => {
-          updateExpense(editExpenseId, res.data);
+          updateExpense(editExpenseId, expenseData);
+        })
+        .then(() => {
+          setIsLoading(false);
         })
         .catch((err) => {
           Alert.alert('Error', err.message);
+          setIsLoading(false);
         });
     } else {
-      const id = await storeExpense(expenseData);
-      addExpense({ ...expenseData, id: id });
+      const id = await storeExpense(expenseData)
+        .then(() => {
+          addExpense({ ...expenseData, id: id });
+        })
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          Alert.alert('Error', err.message);
+          setIsLoading(false);
+        });
     }
+
     navigation.goBack();
   };
+
+  if (isLoading) {
+    return <LoaderOverlay />;
+  }
 
   return (
     <View style={styles.container}>

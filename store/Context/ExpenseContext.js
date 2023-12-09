@@ -7,10 +7,14 @@ export const ExpenseCtx = createContext({
   setExpenses: (expenses) => {},
   deleteExpense: (id) => {},
   updateExpense: (id, { date, amount, description }) => {},
+  isLoading: false,
+  setIsLoading:()=>{}
+
 });
 
 const ExpenseContextProvider = ({ children }) => {
   const [expenseState, dispatch] = useReducer(expenseReducer, []);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setExpenses = (expenses) => {
     dispatch({ type: 'SET', payload: expenses });
@@ -34,6 +38,8 @@ const ExpenseContextProvider = ({ children }) => {
     deleteExpense: deleteExpense,
     updateExpense: updatedExpense,
     setExpenses: setExpenses,
+    isLoading:isLoading,
+    setIsLoading:setIsLoading
   };
   return <ExpenseCtx.Provider value={values}>{children}</ExpenseCtx.Provider>;
 };

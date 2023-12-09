@@ -12,7 +12,7 @@ const ExpenseForm = ({ defaultValue, submitLabel, onCancel, onSubmit }) => {
       isValid: true,
     },
     date: {
-      value: defaultValue ? getFormattedDate(defaultValue.date) : '',
+      value: defaultValue ? getFormattedDate(defaultValue.date) : getFormattedDate(new Date()),
       isValid: true,
     },
     description: {

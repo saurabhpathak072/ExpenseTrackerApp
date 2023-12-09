@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useLayoutEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import IconButton from '../components/UI/Buttons/IconButton';
@@ -6,17 +6,22 @@ import { GlobalStyles } from '../constants/style';
 import CustomButtons from '../components/UI/Buttons/CustomButtons';
 import { ExpenseCtx } from '../store/Context/ExpenseContext';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
-import { storeExpense } from '../utils/Http/expensesRequest';
+import {
+  deleteExpenseRequest,
+  storeExpense,
+  updateExpenseRequest,
+} from '../utils/Http/expensesRequest';
 
 const ManageExpenses = () => {
-  const { expensesList, addExpense, updateExpense, deleteExpense } = useContext(ExpenseCtx);
+  const { expensesList, addExpense, updateExpense, deleteExpense } =
+    useContext(ExpenseCtx);
   const { params } = useRoute();
   const navigation = useNavigation();
 
   const editExpenseId = params?.expenseId;
   const isEditing = !!editExpenseId;
 
-const expense = expensesList.find(exp=>exp.id === editExpenseId)
+  const expense = expensesList.find((exp) => exp.id === editExpenseId);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -25,7 +30,13 @@ const expense = expensesList.find(exp=>exp.id === editExpenseId)
   }, [navigation, isEditing]);
 
   const deleteExpenseHandler = () => {
-    deleteExpense(editExpenseId);
+    deleteExpenseRequest(editExpenseId)
+      .then(() => {
+        deleteExpense(editExpenseId);
+      })
+      .catch((err) => {
+        Alert.alert('Error', err.message);
+      });
     navigation.goBack();
   };
 
@@ -33,12 +44,18 @@ const expense = expensesList.find(exp=>exp.id === editExpenseId)
     navigation.goBack();
   };
 
-  const confirmExpenseHandler = async  (expenseData) => {
+  const confirmExpenseHandler = async (expenseData) => {
     if (isEditing) {
-      updateExpense(editExpenseId, expenseData);
+      updateExpenseRequest(editExpenseId, expenseData)
+        .then((res) => {
+          updateExpense(editExpenseId, res.data);
+        })
+        .catch((err) => {
+          Alert.alert('Error', err.message);
+        });
     } else {
-     const id = await storeExpense(expenseData);
-      addExpense({...expenseData, id:id});
+      const id = await storeExpense(expenseData);
+      addExpense({ ...expenseData, id: id });
     }
     navigation.goBack();
   };
@@ -46,9 +63,14 @@ const expense = expensesList.find(exp=>exp.id === editExpenseId)
   return (
     <View style={styles.container}>
       <View>
-        <ExpenseForm defaultValue={expense} onSubmit={confirmExpenseHandler} onCancel={cancelExpenseHandler} submitLabel={isEditing ? 'Update' : 'Add'}/>
+        <ExpenseForm
+          defaultValue={expense}
+          onSubmit={confirmExpenseHandler}
+          onCancel={cancelExpenseHandler}
+          submitLabel={isEditing ? 'Update' : 'Add'}
+        />
       </View>
-      
+
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton

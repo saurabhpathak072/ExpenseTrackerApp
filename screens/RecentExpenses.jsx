@@ -16,7 +16,6 @@ const RecentExpenses = () => {
   useEffect(() => {
     async function getExpenses() {
       const expenses = await fetchExpenses();
-      console.log('Expenses', expenses);
       setExpenses(expenses);
     }
     getExpenses();

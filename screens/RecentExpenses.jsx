@@ -24,7 +24,6 @@ const RecentExpenses = () => {
         reject(err);
       });
 
-      console.log('result', result);
       resolve(result);
     })
       .then((expenses) => {
@@ -48,7 +47,7 @@ const RecentExpenses = () => {
   }, []);
 
   if (error && !isLoading) {
-    console.log('error',error);
+
     return (
       <ErrorOverlay
         message={'Could not fetched'}

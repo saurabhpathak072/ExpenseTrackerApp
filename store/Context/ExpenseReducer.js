@@ -2,7 +2,6 @@ const expenseReducer = (state, action) =>{
     switch (action.type) {
         case 'ADD':
             const id = new Date().toString() + (Math.random() * 10)
-            console.log();
             return [{...action.payload, id}, ...state];
         case 'DELETE':
             return state.filter((expense)=>expense.id !== action.payload)
